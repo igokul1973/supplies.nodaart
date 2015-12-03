@@ -7,6 +7,8 @@ $baseDir = dirname(dirname($vendorDir));
 
 return array(
     $vendorDir . '/ezyang/htmlpurifier/library/HTMLPurifier.composer.php',
+    $vendorDir . '/symfony/polyfill-mbstring/bootstrap.php',
+    $vendorDir . '/react/promise/src/functions_include.php',
     $vendorDir . '/swiftmailer/swiftmailer/lib/swift_required.php',
     $vendorDir . '/codeception/verify/src/Codeception/function.php',
 );
