@@ -49,7 +49,7 @@ class Article extends ActiveRecord
     {
         return [
             [['user_id', 'title', 'summary', 'content', 'status'], 'required'],
-            [['user_id', 'status', 'category'], 'integer'],
+            [['user_id', 'status', 'category', 'created_at', 'updated_at'], 'integer'],
             [['summary', 'content'], 'string'],
             [['title'], 'string', 'max' => 255]
         ];

@@ -63,8 +63,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'value' => $model->categoryName,
             ],
             'created_at:dateTime',
-            //'updated_at:dateTime',
+            'updated_at:dateTime',
         ],
     ]) ?>
-
 </div>

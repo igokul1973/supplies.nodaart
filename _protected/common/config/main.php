@@ -53,6 +53,13 @@ return [
                 ],
             ],
         ],
+        'formatter' => [
+                'locale' => 'en_US',
+                'defaultTimeZone' => 'UTC',
+                'timeZone' => 'America/New_York',
+                'dateFormat' => 'php:F j, Y',
+                'datetimeFormat' => 'php:F j, Y, g:i a'
+        ]
     ], // components
 
     // set allias for our uploads folder so it can be shared by both frontend and backend applications
