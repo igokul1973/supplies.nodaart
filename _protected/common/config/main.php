@@ -51,6 +51,11 @@ return [
                     'basePath' => '@common/translations',
                     'sourceLanguage' => 'en'
                 ],
+                'backend' => [
+                    'class' => 'yii\i18n\PhpMessageSource',
+                    'basePath' => '@common/translations',
+                    'sourceLanguage' => 'en'
+                ],
             ],
         ],
         'formatter' => [
