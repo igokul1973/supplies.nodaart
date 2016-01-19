@@ -12,7 +12,7 @@ use yii\filters\VerbFilter;
 /**
  * PoStatusController implements the CRUD actions for PoStatus model.
  */
-class PoStatusController extends Controller
+class PoStatusController extends BackendController
 {
     public function behaviors()
     {

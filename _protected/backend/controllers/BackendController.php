@@ -26,14 +26,118 @@ class BackendController extends Controller
                 'class' => AccessControl::className(),
                 'rules' => [
                     [
+                        'actions' => ['login', 'error'],
+                        'allow' => true,
+                    ],
+                    [
+                        'actions' => ['logout', 'index'],
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ],
+                    [
                         'controllers' => ['user'],
                         'actions' => ['index', 'view', 'create', 'update', 'delete'],
                         'allow' => true,
                         'roles' => ['admin'],
                     ],
+
                     [
-                        // other rules
+                        'controllers' => ['product'],
+                        'actions' => ['import-products', 'index', 'view', 'create', 'update'],
+                        'allow' => true,
+                        'roles' => ['editor']
                     ],
+                    [
+                        'controllers' => ['product'],
+                        'actions' => ['import-products', 'index', 'view', 'create', 'update', 'delete'],
+                        'allow' => true,
+                        'roles' => ['admin']
+                    ],
+                    [
+                        'controllers' => ['product_picture'],
+                        'actions' => ['index', 'view', 'create', 'update', 'delete', 'deleteFile'],
+                        'allow' => true,
+                        'roles' => ['admin']
+                    ],
+                    [
+                        'controllers' => ['product_category'],
+                        'actions' => ['index', 'view', 'create', 'update', 'delete'],
+                        'allow' => true,
+                        'roles' => ['admin']
+                    ],
+                    [
+                        'controllers' => ['product_category'],
+                        'actions' => ['index', 'view'],
+                        'allow' => true,
+                        'roles' => ['editor']
+                    ],
+                    [
+                        'controllers' => ['supplier'],
+                        'actions' => ['index', 'view', 'create', 'update', 'delete'],
+                        'allow' => true,
+                        'roles' => ['admin']
+                    ],
+                    [
+                        'controllers' => ['supplier'],
+                        'actions' => ['index', 'view', 'create'],
+                        'allow' => true,
+                        'roles' => ['editor']
+                    ],
+                    [
+                        'controllers' => ['purchase-order'],
+                        'actions' => ['index', 'view', 'create', 'update', 'delete'],
+                        'allow' => true,
+                        'roles' => ['admin']
+                    ],
+                    [
+                        'controllers' => ['purchase-order'],
+                        'actions' => ['index', 'view', 'create', 'update'],
+                        'allow' => true,
+                        'roles' => ['editor']
+                    ],
+                    [
+                        'controllers' => ['purchase-order-details'],
+                        'actions' => ['add-products-to-po', 'import-products-to-po', 'index', 'view', 'create', 'update', 'delete'],
+                        'allow' => true,
+                        'roles' => ['editor'],
+                    ],
+                    [
+                        'controllers' => ['profile'],
+                        'actions' => ['index', 'view', 'create', 'update', 'delete'],
+                        'allow' => true,
+                        'roles' => ['admin']
+                    ],
+                    [
+                        'controllers' => ['color'],
+                        'actions' => ['index', 'view', 'create', 'update', 'delete'],
+                        'allow' => true,
+                        'roles' => ['editor']
+                    ],
+                    [
+                        'controllers' => ['status'],
+                        'actions' => ['index', 'view', 'create', 'update', 'delete'],
+                        'allow' => true,
+                        'roles' => ['admin']
+                    ],
+                    [
+                        'controllers' => ['status'],
+                        'actions' => ['index', 'view'],
+                        'allow' => true,
+                        'roles' => ['editor']
+                    ],
+                    [
+                        'controllers' => ['country'],
+                        'actions' => ['index', 'view', 'create', 'update', 'delete'],
+                        'allow' => true,
+                        'roles' => ['admin']
+                    ],
+                    [
+                        'controllers' => ['country'],
+                        'actions' => ['index', 'view', 'create', 'update'],
+                        'allow' => true,
+                        'roles' => ['editor']
+                    ],
+
 
                 ], // rules
 
@@ -49,5 +153,6 @@ class BackendController extends Controller
         ]; // return
 
     } // behaviors
+
 
 } // BackendController

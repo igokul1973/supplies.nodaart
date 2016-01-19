@@ -20,6 +20,8 @@ use Yii;
  */
 class ProductPicture extends \yii\db\ActiveRecord
 {
+    public $pictures;
+
     /**
      * @inheritdoc
      */
@@ -34,9 +36,10 @@ class ProductPicture extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['product_id', 'file_name', 'file_path', 'file_url'], 'required'],
+            // [['product_id', 'file_name', 'file_path', 'file_url'], 'required'],
             [['product_id', 'image_type'], 'integer'],
             [['notes'], 'string'],
+            [['file_name'], 'unique'],
             [['file_name'], 'string', 'max' => 50],
             [['file_path', 'file_url'], 'string', 'max' => 255]
         ];
@@ -82,4 +85,68 @@ class ProductPicture extends \yii\db\ActiveRecord
     {
         return new ProductPictureQuery(get_called_class());
     }
+
+
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function upload()
+    {
+        if ($this->validate()) {
+            foreach ($this->pictures as $picture) {
+                $picture->saveAs(Yii::$app->params['uploadPath'] . $picture->baseName . '.' . $picture->extension);
+            }
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * fetch stored file name with complete path 
+     * @return string
+     */
+    public function getFile() 
+    {
+        // die(var_dump(Yii::$app->params['uploadPath']));
+        return isset($this->id) ? Yii::$app->params['uploadPath'] . $this->file_name : null;
+    }
+
+    /**
+     * fetch stored file url
+     * @return mixed
+     */
+    public function getFileUrl($id) 
+    {
+        $file = isset($this->id) ? $this->id : false;
+        return Yii::$app->params['uploadUrl'] . $file;
+    }
+
+
+    /**
+    * Process deletion of file
+    *
+    * @return boolean the status of deletion
+    */
+    public function deleteFile() {
+        
+        $file = $this->getFile();
+ 
+        // check if file exists on server
+        if (empty($file) || !file_exists($file)) {
+            return false;
+        }
+ 
+        // check if uploaded file can be deleted on server
+        if (!unlink($file)) {
+            return false;
+        }
+ 
+        // if deletion successful, reset your file attributes
+        $this->delete();
+ 
+        return true;
+    }
+
 }

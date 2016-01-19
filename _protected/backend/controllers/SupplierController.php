@@ -3,8 +3,10 @@
 namespace backend\controllers;
 
 use Yii;
+use yii\helpers\ArrayHelper;
 use backend\models\Supplier;
 use backend\models\SupplierSearch;
+use backend\models\Country;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -12,7 +14,7 @@ use yii\filters\VerbFilter;
 /**
  * SupplierController implements the CRUD actions for Supplier model.
  */
-class SupplierController extends Controller
+class SupplierController extends BackendController
 {
     public function behaviors()
     {
@@ -61,12 +63,15 @@ class SupplierController extends Controller
     public function actionCreate()
     {
         $model = new Supplier();
+        $country_models = Country::find()->all();
+        $country_list = ArrayHelper::map($country_models, 'id', 'name');
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('create', [
                 'model' => $model,
+                'country_list' => $country_list,
             ]);
         }
     }
@@ -80,12 +85,14 @@ class SupplierController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        $country_list = ArrayHelper::map(Country::find()->all(), 'id', 'name');
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('update', [
                 'model' => $model,
+                'country_list' => $country_list,
             ]);
         }
     }

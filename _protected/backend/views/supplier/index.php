@@ -1,7 +1,8 @@
 <?php
 
 use yii\helpers\Html;
-use yii\grid\GridView;
+// use yii\grid\GridView;
+use kartik\grid\GridView;
 
 /* @var $this yii\web\View */
 /* @var $searchModel backend\models\SupplierSearch */
@@ -12,7 +13,7 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="supplier-index">
 
-    <h1><?= Html::encode($this->title) ?></h1>
+    <h1><?= Html::encode($this->title); ?></h1>
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
@@ -25,7 +26,7 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-            'id',
+            // 'id',
             'name',
             'main_email:email',
             'alt_email:email',
@@ -35,6 +36,7 @@ $this->params['breadcrumbs'][] = $this->title;
             // 'street_2',
             // 'city',
             // 'state',
+            // 'country_id',
             // 'zip',
             // 'contact_name',
             // 'notes:ntext',

@@ -18,7 +18,7 @@ class SupplierSearch extends Supplier
     public function rules()
     {
         return [
-            [['id'], 'integer'],
+            [['id', 'country_id'], 'integer'],
             [['name', 'main_email', 'alt_email', 'main_phone', 'mobile_phone', 'street_1', 'street_2', 'city', 'state', 'zip', 'contact_name', 'notes'], 'safe'],
         ];
     }
@@ -57,6 +57,7 @@ class SupplierSearch extends Supplier
 
         $query->andFilterWhere([
             'id' => $this->id,
+            'country_id' => $this->country_id,
         ]);
 
         $query->andFilterWhere(['like', 'name', $this->name])

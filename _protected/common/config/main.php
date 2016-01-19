@@ -1,6 +1,6 @@
 <?php
 return [
-    'name' => 'My Company',
+    'name' => 'NodaArt Inc.',
     //'language' => 'sr',
     'vendorPath' => dirname(dirname(__DIR__)) . '/vendor',
     'components' => [
@@ -32,6 +32,29 @@ return [
             'class' => 'yii\web\UrlManager',
             'enablePrettyUrl' => true,
             'showScriptName' => false,
+            'enableStrictParsing' => false,
+            'rules' => [
+                // your rules go here
+                /*'<controller>/view/<id:\d+>' => '<controller>/view',
+                '<controller>/update/<id:\d+>' => '<controller>/update',*/
+                [
+                    'pattern' => '<controller>/view/<id:\d+>',
+                    'route' => '<controller>/view',
+                ],
+                [
+                    'pattern' => '<controller>/update/<id:\d+>',
+                    'route' => '<controller>/update',
+                ],
+                [
+                    'pattern' => '<controller>/delete/<id:\d+>',
+                    'route' => '<controller>/delete',
+                ],
+                [
+                    'pattern' => '<controller>/<action>/<id:\d+>',
+                    'route' => '<controller>/<action>'
+                ]
+            ],
+
         ],
         'session' => [
             'class' => 'yii\web\DbSession',

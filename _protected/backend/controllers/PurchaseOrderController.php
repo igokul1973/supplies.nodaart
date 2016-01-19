@@ -3,8 +3,14 @@
 namespace backend\controllers;
 
 use Yii;
+use yii\helpers\ArrayHelper;
 use backend\models\PurchaseOrder;
 use backend\models\PurchaseOrderSearch;
+use backend\models\PurchaseOrderDetails;
+use backend\models\PurchaseOrderDetailsSearch;
+use backend\models\PoStatus;
+use backend\models\Product;
+use backend\models\ProductSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -12,19 +18,8 @@ use yii\filters\VerbFilter;
 /**
  * PurchaseOrderController implements the CRUD actions for PurchaseOrder model.
  */
-class PurchaseOrderController extends Controller
+class PurchaseOrderController extends BackendController
 {
-    public function behaviors()
-    {
-        return [
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'delete' => ['post'],
-                ],
-            ],
-        ];
-    }
 
     /**
      * Lists all PurchaseOrder models.
@@ -48,8 +43,12 @@ class PurchaseOrderController extends Controller
      */
     public function actionView($id)
     {
+        $poSearchModel = new PurchaseOrderDetailsSearch();
+        $poDataProvider = $poSearchModel->searchById(Yii::$app->request->queryParams, $id);
         return $this->render('view', [
             'model' => $this->findModel($id),
+            'poSearchModel' => $poSearchModel,
+            'poDataProvider' => $poDataProvider
         ]);
     }
 
@@ -61,12 +60,21 @@ class PurchaseOrderController extends Controller
     public function actionCreate()
     {
         $model = new PurchaseOrder();
+        // getting the list of all purchase order statuses
+        // for choosing from dropdown Select2 widget
+        $po_status_list = ArrayHelper::map(PoStatus::find()->all(), 'id', 'status_name');
+        // setting default order status - "in progress"
+        $model->status_id = 1;
+        // logging the user who creates and updates purchase order
+        $model->created_by = Yii::$app->user->id;
+        $model->updated_by = Yii::$app->user->id;
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['/purchase-order-details/add-products-to-po', 'id' => $model->id]);
         } else {
             return $this->render('create', [
                 'model' => $model,
+                'po_status_list' => $po_status_list,
             ]);
         }
     }
@@ -80,12 +88,18 @@ class PurchaseOrderController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        // getting the list of all purchase order statuses
+        // for choosing from dropdown Select2 widget
+        $po_status_list = ArrayHelper::map(PoStatus::find()->all(), 'id', 'status_name');
+        // logging the user who updates purchase order
+        $model->updated_by = Yii::$app->user->id;
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('update', [
                 'model' => $model,
+                'po_status_list' => $po_status_list,
             ]);
         }
     }

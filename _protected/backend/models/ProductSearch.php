@@ -12,14 +12,18 @@ use backend\models\Product;
  */
 class ProductSearch extends Product
 {
+
+    // adding public attributes that will be used to store the data to be searched
+    public $suppliers;
+
     /**
      * @inheritdoc
      */
     public function rules()
     {
         return [
-            [['id', 'supplier_id', 'width', 'height', 'depth', 'length', 'color_id', 'weight'], 'integer'],
-            [['sku', 'short_descr', 'long_descr', 'notes', 'supplier_sku'], 'safe'],
+            [['id', 'product_category_id', 'width', 'height', 'depth', 'length', 'color_id', 'weight'], 'integer'],
+            [['sku', 'short_descr', 'long_descr', 'notes', 'supplier_sku', 'name', 'suppliers'], 'safe'],
             [['supplier_price', 'wholesale_price'], 'number'],
         ];
     }
@@ -44,6 +48,9 @@ class ProductSearch extends Product
     {
         $query = Product::find();
 
+        // custom code below in order to include search on $suppliers
+        $query->joinWith(['suppliers']); // end of custom code
+
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
@@ -58,7 +65,6 @@ class ProductSearch extends Product
 
         $query->andFilterWhere([
             'id' => $this->id,
-            'supplier_id' => $this->supplier_id,
             'supplier_price' => $this->supplier_price,
             'wholesale_price' => $this->wholesale_price,
             'width' => $this->width,
@@ -66,14 +72,17 @@ class ProductSearch extends Product
             'depth' => $this->depth,
             'length' => $this->length,
             'color_id' => $this->color_id,
+            'product_category_id' => $this->product_category_id,
             'weight' => $this->weight,
         ]);
 
         $query->andFilterWhere(['like', 'sku', $this->sku])
+            ->andFilterWhere(['like', 'product.name', $this->name])
             ->andFilterWhere(['like', 'short_descr', $this->short_descr])
             ->andFilterWhere(['like', 'long_descr', $this->long_descr])
             ->andFilterWhere(['like', 'notes', $this->notes])
-            ->andFilterWhere(['like', 'supplier_sku', $this->supplier_sku]);
+            ->andFilterWhere(['like', 'supplier_sku', $this->supplier_sku])
+            ->andFilterWhere(['supplier.id' => $this->suppliers]);
 
         return $dataProvider;
     }

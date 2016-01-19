@@ -11,14 +11,14 @@ use Yii;
  * Site controller.
  * It is responsible for displaying static pages, and logging users in and out.
  */
-class SiteController extends Controller
+class SiteController extends BackendController
 {
     /**
      * Returns a list of behaviors that this component should behave as.
      *
      * @return array
      */
-    public function behaviors()
+    /*public function behaviors()
     {
         return [
             'access' => [
@@ -42,7 +42,7 @@ class SiteController extends Controller
                 ],
             ],
         ];
-    }
+    }*/
 
     /**
      * Declares external actions for the controller.

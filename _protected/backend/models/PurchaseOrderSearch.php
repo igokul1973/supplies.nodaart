@@ -18,7 +18,7 @@ class PurchaseOrderSearch extends PurchaseOrder
     public function rules()
     {
         return [
-            [['id', 'product_id', 'quantity', 'status_id', 'created_by', 'updated_by', 'created_at', 'updated_at'], 'integer'],
+            [['id', 'status_id', 'created_by', 'updated_by', 'created_at', 'updated_at'], 'integer'],
             [['note'], 'safe'],
         ];
     }
@@ -57,8 +57,6 @@ class PurchaseOrderSearch extends PurchaseOrder
 
         $query->andFilterWhere([
             'id' => $this->id,
-            'product_id' => $this->product_id,
-            'quantity' => $this->quantity,
             'status_id' => $this->status_id,
             'created_by' => $this->created_by,
             'updated_by' => $this->updated_by,

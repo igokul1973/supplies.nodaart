@@ -35,6 +35,8 @@ use yii\widgets\ActiveForm;
 
     <?php // echo $form->field($model, 'state') ?>
 
+    <?php // echo $form->field($model, 'country_id') ?>
+
     <?php // echo $form->field($model, 'zip') ?>
 
     <?php // echo $form->field($model, 'contact_name') ?>

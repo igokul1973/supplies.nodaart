@@ -7,7 +7,7 @@ use yii\helpers\Html;
 
 $this->title = Yii::t('backend', 'Update {modelClass}: ', [
     'modelClass' => 'Product',
-]) . ' ' . $model->id;
+]) . ' ' . $model->sku;
 $this->params['breadcrumbs'][] = ['label' => Yii::t('backend', 'Products'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->id, 'url' => ['view', 'id' => $model->id]];
 $this->params['breadcrumbs'][] = Yii::t('backend', 'Update');
@@ -18,6 +18,11 @@ $this->params['breadcrumbs'][] = Yii::t('backend', 'Update');
 
     <?= $this->render('_form', [
         'model' => $model,
+        'product_picture_model' => $product_picture_model,
+        'image_list' => $image_list,
+        'supplier_list' => $supplier_list,
+        'color_list' => $color_list,
+        'prod_category_list' => $prod_category_list,
     ]) ?>
 
 </div>

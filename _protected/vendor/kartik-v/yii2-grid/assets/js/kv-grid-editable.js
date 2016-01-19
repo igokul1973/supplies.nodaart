@@ -1,8 +1,8 @@
 /*!
  * @package   yii2-grid
  * @author    Kartik Visweswaran <kartikv2@gmail.com>
- * @copyright Copyright &copy; Kartik Visweswaran, Krajee.com, 2014 - 2015
- * @version   3.0.7
+ * @copyright Copyright &copy; Kartik Visweswaran, Krajee.com, 2014 - 2016
+ * @version   3.0.9
  *
  * Client actions for yii2-grid EditableColumn
  * 
@@ -11,14 +11,15 @@
  * For more JQuery plugins visit http://plugins.krajee.com
  * For more Yii related demos visit http://demos.krajee.com
  */
-var kvRefreshEC = function (gridId, css) {
+var kvRefreshEC;
+(function ($) {
     "use strict";
-    (function ($) {
+    kvRefreshEC = function (gridId, css) {
         var $grid = $('#' + gridId);
-        $grid.find('.' + css).each(function() {
-            $(this).on('editableSuccess', function(){
+        $grid.find('.' + css).each(function () {
+            $(this).on('editableSuccess', function () {
                 $grid.yiiGridView("applyFilter");
             });
         });
-    })(window.jQuery);
-};
+    };
+})(window.jQuery);

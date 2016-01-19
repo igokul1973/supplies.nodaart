@@ -5,6 +5,7 @@ use common\rbac\models\Role;
 use nenad\passwordStrength\StrengthValidator;
 use yii\behaviors\TimestampBehavior;
 use Yii;
+use common\models\Profile;
 
 /**
  * This is the user model class extending UserIdentity.
@@ -211,6 +212,18 @@ class User extends UserIdentity
         {
             return false; // invalid username|email
         }
+    }
+
+    /**
+     * Finds user Profile
+     * NOTE: used everywhere.
+     *
+     * @param  string $username Can be either username or email based on scenario.
+     * @return Profile
+     */
+    public function getProfile()
+    {
+        return $this->hasOne(Profile::className(), ['user_id' => 'id']);
     }
   
 //------------------------------------------------------------------------------------------------//

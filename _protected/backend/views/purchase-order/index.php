@@ -1,13 +1,14 @@
 <?php
 
 use yii\helpers\Html;
-use yii\grid\GridView;
+use kartik\grid\GridView;
 
 /* @var $this yii\web\View */
 /* @var $searchModel backend\models\PurchaseOrderSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
 $this->title = Yii::t('backend', 'Purchase Orders');
+
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="purchase-order-index">
@@ -26,16 +27,31 @@ $this->params['breadcrumbs'][] = $this->title;
             ['class' => 'yii\grid\SerialColumn'],
 
             'id',
-            'product_id',
-            'quantity',
-            'status_id',
+            // 'status_id',
+            [
+                'attribute' => 'status_id',
+                'value' => 'status.status_name'
+            ],
             'note:ntext',
             // 'created_by',
+            [
+                'attribute' => 'updated_by',
+                'value' => 'updatedBy.profile.fullName',
+            ],
             // 'updated_by',
             // 'created_at',
             // 'updated_at',
 
-            ['class' => 'yii\grid\ActionColumn'],
+            [
+                'class' => 'kartik\grid\ActionColumn',
+                'dropdown' => false,
+                'hAlign' => 'center',
+                'buttons' => [
+                    'update' => function($url, $model) {
+                        return Html::a('<span class="glyphicon glyphicon-pencil"></span>', ['purchase-order-details/add-products-to-po', 'id' => $model->id], ['title' => 'Update', 'data-pjax' => '0']);
+                    },
+                ]
+            ],
         ],
     ]); ?>
 

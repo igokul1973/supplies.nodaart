@@ -1,7 +1,7 @@
 <?php
 
 use yii\helpers\Html;
-use yii\widgets\ListView;
+use kartik\grid\GridView;
 
 /* @var $this yii\web\View */
 /* @var $searchModel backend\models\ImageTypeSearch */
@@ -13,18 +13,30 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="image-type-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
-    <?php echo $this->render('_search', ['model' => $searchModel]); ?>
+    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
         <?= Html::a(Yii::t('backend', 'Create Image Type'), ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
-    <?= ListView::widget([
+    <?= GridView::widget([
         'dataProvider' => $dataProvider,
-        'itemOptions' => ['class' => 'item'],
-        'itemView' => function ($model, $key, $index, $widget) {
-            return Html::a(Html::encode($model->name), ['view', 'id' => $model->id]);
-        },
-    ]) ?>
+        'filterModel' => $searchModel,
+        'resizableColumns' => true,
+        'persistResize' => true,
+        'floatHeader' => true,
+        'columns' => [
+            ['class' => 'yii\grid\SerialColumn'],
+
+            // 'id',
+            'name',
+
+            [
+                'class' => 'kartik\grid\ActionColumn',
+                'dropdown' => false,
+                'hAlign' => 'center'
+            ],
+        ],
+    ]); ?>
 
 </div>

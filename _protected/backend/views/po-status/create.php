@@ -6,7 +6,7 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model backend\models\PoStatus */
 
-$this->title = Yii::t('backend', 'Create Po Status');
+$this->title = Yii::t('backend', 'Create PO Status');
 $this->params['breadcrumbs'][] = ['label' => Yii::t('backend', 'Po Statuses'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>

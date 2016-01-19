@@ -3,15 +3,13 @@
 /**
  * @package   yii2-grid
  * @author    Kartik Visweswaran <kartikv2@gmail.com>
- * @copyright Copyright &copy; Kartik Visweswaran, Krajee.com, 2014 - 2015
- * @version   3.0.7
+ * @copyright Copyright &copy; Kartik Visweswaran, Krajee.com, 2014 - 2016
+ * @version   3.0.9
  */
 
 namespace kartik\grid;
 
 use Yii;
-use yii\base\InvalidConfigException;
-use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 
 /**
@@ -115,7 +113,7 @@ class SerialColumn extends \yii\grid\SerialColumn
     /**
      * @var array of row data for the column for the current page
      */
-    private $_rows = [];
+    protected $_rows = [];
 
     /**
      * @inheritdoc

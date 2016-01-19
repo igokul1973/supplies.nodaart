@@ -1,7 +1,14 @@
 <?php
 
 use yii\helpers\Html;
-use yii\widgets\ActiveForm;
+// use yii\widgets\ActiveForm;
+use yii\helpers\ArrayHelper;
+use yii\bootstrap\ActiveForm;
+use kartik\widgets\DatePicker;
+use kartik\widgets\Typeahead;
+use kartik\widgets\Select2;
+use kartik\checkbox\CheckboxX;
+use kartik\widgets\SwitchInput;
 
 /* @var $this yii\web\View */
 /* @var $model backend\models\Supplier */
@@ -10,7 +17,22 @@ use yii\widgets\ActiveForm;
 
 <div class="supplier-form">
 
-    <?php $form = ActiveForm::begin(); ?>
+    <? $form = ActiveForm::begin([
+        'layout' => 'horizontal',
+        // 'enableAjaxValidation' => true,
+        'fieldConfig' => [
+            'template' => "{label}\n{beginWrapper}\n{input}\n{hint}\n{error}\n{endWrapper}",
+            'horizontalCssClasses' => [
+                'label' => 'col-sm-4',
+                'wrapper' => 'col-sm-10',
+                'error' => '',
+            ],
+        ],
+        'options' => [
+            'enctype'=>'multipart/form-data',
+        ],
+    ]);
+    ?>
 
     <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
 
@@ -30,6 +52,17 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'state')->textInput(['maxlength' => true]) ?>
 
+    <?
+    // Renders list of all countries
+    echo $form->field($model, 'country_id')->widget(Select2::classname(), [
+        'data' => $country_list,
+        'options' => ['placeholder' => 'Choose the country ...'],
+        'pluginOptions' => [
+            'allowClear' => true
+        ],
+    ]);
+    ?>
+
     <?= $form->field($model, 'zip')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'contact_name')->textInput(['maxlength' => true]) ?>
@@ -37,7 +70,9 @@ use yii\widgets\ActiveForm;
     <?= $form->field($model, 'notes')->textarea(['rows' => 6]) ?>
 
     <div class="form-group">
-        <?= Html::submitButton($model->isNewRecord ? Yii::t('backend', 'Create') : Yii::t('backend', 'Update'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+        <div class="col-sm-5 col-sm-offset-2">
+            <?= Html::submitButton($model->isNewRecord ? Yii::t('backend', 'Create') : Yii::t('backend', 'Update'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+        </div>
     </div>
 
     <?php ActiveForm::end(); ?>

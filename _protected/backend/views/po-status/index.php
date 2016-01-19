@@ -1,13 +1,13 @@
 <?php
 
 use yii\helpers\Html;
-use yii\grid\GridView;
+use kartik\grid\GridView;
 
 /* @var $this yii\web\View */
 /* @var $searchModel backend\models\PoStatusSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = Yii::t('backend', 'Po Statuses');
+$this->title = Yii::t('backend', 'Purchase Order Statuses');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="po-status-index">
@@ -16,19 +16,30 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
-        <?= Html::a(Yii::t('backend', 'Create Po Status'), ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a(Yii::t('backend', 'Create PO Status'), ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
+        'resizableColumns' => true,
+        'persistResize' => true,
+        'floatHeader' => true,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-            'id',
-            'status_name',
+            // 'id',
+            [
+                'attribute' => 'status_name',
+                'format' => 'text',
+                'hidden' => false
+            ],
 
-            ['class' => 'yii\grid\ActionColumn'],
+            [
+                'class' => 'kartik\grid\ActionColumn',
+                'dropdown' => false,
+                'hAlign' => 'center'
+            ],
         ],
     ]); ?>
 

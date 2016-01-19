@@ -12,7 +12,7 @@ use yii\filters\VerbFilter;
 /**
  * ImageTypeController implements the CRUD actions for ImageType model.
  */
-class ImageTypeController extends Controller
+class ImageTypeController extends BackendController
 {
     public function behaviors()
     {
