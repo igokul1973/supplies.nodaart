@@ -5,6 +5,7 @@ namespace backend\models;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
+use yii\data\ArrayDataProvider;
 use backend\models\PurchaseOrderDetails;
 
 /**
@@ -87,7 +88,6 @@ class PurchaseOrderDetailsSearch extends PurchaseOrderDetails
         $query->andFilterWhere(['like', 'product.sku', $this->sku])
             ->andFilterWhere(['like', 'product.name', $this->product_name]);
 
-
         return $dataProvider;
     }
 
@@ -122,6 +122,7 @@ class PurchaseOrderDetailsSearch extends PurchaseOrderDetails
             'asc' => ['product.sku' => SORT_ASC],
             'desc' => ['product.sku' => SORT_DESC],
         ];
+        // $query->addOrderBy(new \yii\db\Expression('LENGTH(product.sku), sku DESC'));
 
         $this->load($params);
 
@@ -141,8 +142,127 @@ class PurchaseOrderDetailsSearch extends PurchaseOrderDetails
         $query->andFilterWhere(['like', 'product.sku', $this->sku])
             ->andFilterWhere(['like', 'product.name', $this->product_name]);
 
-
         return $dataProvider;
     }
+
+    /**
+     * Creates data provider instance for Excel export
+     *
+     * @param array $params
+     *
+     * @return ActiveDataProvider
+     */
+    public function searchForExcel($id)
+    {
+
+        $poSearchModelsForExcel = PurchaseOrderDetails::find()->where(['po_id' => $id])->all();
+
+        $all_skus = [];
+        $temp_array = [];
+        $data_provider_array = [];
+
+        foreach ($poSearchModelsForExcel as $model) {
+            $sku = $model->product->sku;
+                if (strpos($sku, "-")) {
+                    list ($main_sku, $size) = explode("-", $sku);
+                    if (ctype_digit($size)) {
+                        // var_dump($skus_array);
+                            $temp_array[$main_sku][] = [
+                                'id' => $model->id,
+                                'picture_path' => $model->product->mainProductPicture,
+                                'sku' => $main_sku,
+                                'size' => $size,
+                                'quantity' => $model->quantity,
+                                'product_name' => $model->product->name,
+                            ];    
+                    }
+                } else {
+                    $temp_array[$sku][] = [
+                        'id' => $model->id,
+                        'picture_path' => $model->product->mainProductPicture,
+                        'sku' => $sku,
+                        'quantity' => $model->quantity,
+                        'product_name' => $model->product->name,
+                    ];
+
+                }
+        }
+
+        // Получение списка столбцов
+        foreach ($temp_array as $key => $row) {
+            // let's sort the arrays by the 'size' value
+            foreach ($temp_array[$key] as $key2 => $row2) {
+                if (count($temp_array[$key]) > 1) {
+                    usort($temp_array[$key], function($a,$b){return $a['size']-$b['size'];});
+                }
+            }
+
+            foreach ($temp_array[$key] as $key2 => $value) {
+                if (array_key_exists('size', $value)) {
+                    if ($key2 == 0) {
+                        $data_provider_array[] = [
+                            'id' => $value['id'],
+                            'picture_path' => $value['picture_path'],
+                            'sku' => $value['sku'],
+                            'quantity' => '',
+                            'product_name' => $value['product_name'],
+                        ];
+                        $data_provider_array[] = [
+                            'id' => $value['id'],
+                            'picture_path' => '',
+                            'sku' => 'Size ' . $value['size'],
+                            'quantity' => $value['quantity'],
+                            'product_name' => '',
+                        ];
+                    } else {
+                        $data_provider_array[] = [
+                            'id' => $value['id'],
+                            'picture_path' => '',
+                            'sku' => 'Size ' . $value['size'],
+                            'quantity' => $value['quantity'],
+                            'product_name' => '',
+                        ];
+                    }
+                } else {
+                    $data_provider_array[] = [
+                        'id' => $value['id'],
+                        'picture_path' => $value['picture_path'],
+                        'sku' => $value['sku'],
+                        'quantity' => $value['quantity'],
+                        'product_name' => $value['product_name'],
+                    ];
+
+                }
+            }
+        }
+
+
+        // die(var_dump($data_provider_array));
+
+        $provider = new ArrayDataProvider([
+            'allModels' => $data_provider_array,
+            'sort' => [
+                'attributes' => ['product_id'],
+
+            ],
+            'pagination' => [
+                'pageSize' => 1000,
+            ],
+        ]);
+
+
+        $dataProvider->sort->attributes['sku'] = [
+            // The tables are the ones our relation are configured to
+            'asc' => ['sku' => SORT_ASC],
+            'desc' => ['sku' => SORT_DESC],
+        ];
+
+
+
+
+        return $provider;
+    }
+
+
 
 }

@@ -13,6 +13,7 @@ use backend\models\Product;
 use backend\models\ProductSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
+use yii\data\ArrayDataProvider;
 use yii\filters\VerbFilter;
 
 /**
@@ -30,6 +31,7 @@ class PurchaseOrderController extends BackendController
         $searchModel = new PurchaseOrderSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
+
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -45,10 +47,14 @@ class PurchaseOrderController extends BackendController
     {
         $poSearchModel = new PurchaseOrderDetailsSearch();
         $poDataProvider = $poSearchModel->searchById(Yii::$app->request->queryParams, $id);
+
+        $excelDataProvider = $poSearchModel->searchForExcel($id);
+
         return $this->render('view', [
             'model' => $this->findModel($id),
             'poSearchModel' => $poSearchModel,
-            'poDataProvider' => $poDataProvider
+            'poDataProvider' => $poDataProvider,
+            'excelProvider' => $excelDataProvider,
         ]);
     }
 

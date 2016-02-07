@@ -8,6 +8,8 @@ use kartik\export\ExportMenu;
 use kartik\widgets\FileInput;
 use yii\imagine\Image;
 
+
+
 /* @var $this yii\web\View */
 /* @var $productSearchModel backend\models\PurchaseOrderSearch */
 /* @var $productDataProvider yii\data\ActiveproductDataProvider */
@@ -151,6 +153,29 @@ $this->params['breadcrumbs'][] = $this->title;
     ?>
 
     <?
+    $excelColumns = [
+        ['class' => 'yii\grid\SerialColumn'],
+
+        'id',
+        [
+            'attribute' => 'picture_path',
+            'value' => 'picture_path',
+            'format' => ['image',['width'=>'150','height'=>'150']],
+            'hAlign' => 'center',
+        ],
+        [
+            'attribute' => 'sku',
+            'value' => 'sku',
+            'label' => 'SKU',
+            'format' => 'text',
+        ],
+        'quantity',
+        [
+            'attribute' => 'product_name',
+            'value' => 'product_name',
+        ],
+    ];
+
     $gridColumns =   
     [
         ['class' => 'yii\grid\SerialColumn'],
@@ -168,12 +193,12 @@ $this->params['breadcrumbs'][] = $this->title;
             'label' => 'SKU',
             'format' => 'text',
         ],
+        'quantity',
         [
             'attribute' => 'product_name',
             'value' => 'product.name',
             'label' => 'Product name'
         ],
-        'quantity',
         // 'updated_by',
         // 'created_at',
         // 'updated_at',
@@ -199,17 +224,16 @@ $this->params['breadcrumbs'][] = $this->title;
         ],
     ];
 
-
     $fullExportMenu = ExportMenu::widget([
-        'dataProvider' => $poDetailsDataProvider,
-        'columns' => $gridColumns,
+        'dataProvider' => $excelDataProvider,
+        'columns' => $excelColumns,
         'target' => ExportMenu::TARGET_BLANK,
         'fontAwesome' => true,
         'pjaxContainerId' => 'kv-pjax-container',
         'enableFormatter' => false,
         'exportConfig' => $exportConfig,
-        'selectedColumns' => [0, 1, 2, 3, 4],
-        'noExportColumns' => [5],
+        'selectedColumns' => [0, 2, 3, 4, 5],
+        'noExportColumns' => [1, 6],
         'dropdownOptions' => [
             'label' => 'Full',
             'class' => 'btn btn-default',
@@ -220,23 +244,29 @@ $this->params['breadcrumbs'][] = $this->title;
         'filename' => 'Purchase order #' . $po_model->id . ' - ' . date('Y-m-d'),
         'onRenderDataCell' => function($cell, $content, $model, $key, $index, $grid) {
             // var_dump($cell->getParent()->getParent());
+
             $row_number = $cell->getRow();
             $active_sheet = $cell->getParent()->getParent();
+
             if ($cell->getColumn() == 'B') {
-                $filename = basename($content);
-                // var_dump($filename);
-                $base_dir = Yii::getAlias('@webRoot');
-                $objDrawing = new PHPExcel_Worksheet_Drawing();
-                Image::thumbnail($base_dir . $content, 300, 300)->save($base_dir . '/uploads/prod_pics/thumbs/' . $filename, ['quality' => 100]);
-                $objDrawing->setPath($base_dir . '/uploads/prod_pics/thumbs/' . $filename);
-                $objDrawing->setCoordinates('B'.$row_number);
-                // $objDrawing->setHeight(250);
-                $objDrawing->setOffsetX(12);
-                $objDrawing->setOffsetY(15);
-                
-                $objDrawing->setWorksheet($active_sheet);
-                $active_sheet->getRowDimension($row_number)->setRowHeight(250);
-                $active_sheet->setCellValue('B'.$row_number, '');
+                if ($content !== '') {
+                    $filename = basename($content);
+                    // var_dump($filename);
+                    $base_dir = Yii::getAlias('@webRoot');
+                    $objDrawing = new PHPExcel_Worksheet_Drawing();
+                    Image::thumbnail($base_dir . $content, 300, 300)->save($base_dir . '/uploads/prod_pics/thumbs/' . $filename, ['quality' => 100]);
+                    $objDrawing->setPath($base_dir . '/uploads/prod_pics/thumbs/' . $filename);
+                    $objDrawing->setCoordinates('B'.$row_number);
+                    // $objDrawing->setHeight(250);
+                    $objDrawing->setOffsetX(12);
+                    $objDrawing->setOffsetY(15);
+                    
+                    $objDrawing->setWorksheet($active_sheet);
+                    $image_index = $objDrawing->getImageIndex();
+                    $active_sheet->getRowDimension($row_number)->setRowHeight(250);
+                    $active_sheet->setCellValue('B'.$row_number, '');
+                }
+
             }
             if ($cell->getColumn() == 'C') {
                 $active_sheet->getStyle('C'.$row_number)
@@ -246,6 +276,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 // such as '3423e3' will not be interpreted by Excel as 
                 // a scientific number, such as '3423300'
                 $active_sheet->setCellValueExplicit('C'.$row_number, $content);
+            
             }
         },
         'onRenderSheet' => function($sheet, $grid) {
@@ -253,7 +284,6 @@ $this->params['breadcrumbs'][] = $this->title;
             $sheet->getColumnDimension('B')->setWidth(40);
         },
     ]);
-
 
 
     ?>
@@ -270,6 +300,18 @@ $this->params['breadcrumbs'][] = $this->title;
             'type' => GridView::TYPE_PRIMARY,
             'heading' => '<h3 class="panel-title"><i class="glyphicon glyphicon-book"></i> Library</h3>',
         ],
+        'toggleDataOptions' => [
+            'all' => [
+                'class' => 'btn btn-default',
+                'title' => 'Show all on one page',
+                'label' => 'Show all on one page',
+            ],
+            'page' => [
+                'class' => 'btn btn-default',
+                'title' => 'Show pages',
+                'label' => 'Show pages',
+            ],
+        ],
         // set a label for default menu
         /*'export' => [
             'label' => 'Page',
@@ -278,6 +320,7 @@ $this->params['breadcrumbs'][] = $this->title;
         // your toolbar can include the additional full export menu
         'toolbar' => [
             // '{export}',
+            '{toggleData}',
             $fullExportMenu,
             ['content'=>
                 /*Html::button('<i class="glyphicon glyphicon-plus"></i>', [
@@ -285,13 +328,14 @@ $this->params['breadcrumbs'][] = $this->title;
                     'title'=>Yii::t('backend', 'Add Book'), 
                     'class'=>'btn btn-success'
                 ]) . ' '.*/
-                Html::a('<i class="glyphicon glyphicon-repeat"></i>', ['add-products-to-po', 'id' => $po_model->id], [
+                Html::a('<i class="glyphicon glyphicon-repeat"></i>', ['view', 'id' => $po_model->id], [
                     'data-pjax'=>0, 
                     'class' => 'btn btn-default', 
                     'title'=>Yii::t('backend', 'Reset Grid')
                 ])
             ],
         ],
+        'toggleDataContainer' => ['class' => 'btn-group'],
         'columns' => $gridColumns,
 
     ]); ?>

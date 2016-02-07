@@ -155,6 +155,7 @@ class PurchaseOrderDetailsController extends BackendController
         
         $poDetailsSearchModel = new PurchaseOrderDetailsSearch();
         $poDetailsDataProvider = $poDetailsSearchModel->searchById(Yii::$app->request->queryParams, $id);
+        $excelDataProvider = $poDetailsSearchModel->searchForExcel($id);
 
         // var_dump(Yii::$app->request->post());
 
@@ -180,6 +181,7 @@ class PurchaseOrderDetailsController extends BackendController
             return $this->render('add-products-to-po', [
                 'poDetailsSearchModel' => $poDetailsSearchModel,
                 'poDetailsDataProvider' => $poDetailsDataProvider,
+                'excelDataProvider' => $excelDataProvider,
                 'po_model' => $po_model,
                 'po_detail_model' => $po_detail_model,
                 'po_status_list' => $po_status_list,
@@ -192,6 +194,7 @@ class PurchaseOrderDetailsController extends BackendController
             return $this->render('add-products-to-po', [
                 'poDetailsSearchModel' => $poDetailsSearchModel,
                 'poDetailsDataProvider' => $poDetailsDataProvider,
+                'excelDataProvider' => $excelDataProvider,
                 'po_model' => $po_model,
                 'po_detail_model' => $po_detail_model,
                 'po_status_list' => $po_status_list,
