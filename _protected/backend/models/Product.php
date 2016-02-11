@@ -260,4 +260,5 @@ class Product extends \yii\db\ActiveRecord
     {
         return new ProductQuery(get_called_class());
     }
+
 }

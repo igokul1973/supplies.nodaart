@@ -32,4 +32,15 @@ class ProductQuery extends \yii\db\ActiveQuery
     {
         return parent::one($db);
     }
+
+
+    /**
+     * @inheritdoc
+     * @return Product
+     */
+    public function oneBySku($sku)
+    {
+        $this->andWhere(['sku' => $sku]);
+        return $this;
+    }
 }

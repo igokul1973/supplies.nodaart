@@ -168,6 +168,8 @@ use kartik\widgets\FileInput;
 
     <?= $form->field($model, 'wholesale_price')->textInput(['maxlength' => true]) ?>
 
+    <?= $form->field($model, 'size')->textInput() ?>
+
     <?= $form->field($model, 'width')->textInput() ?>
 
     <?= $form->field($model, 'height')->textInput() ?>

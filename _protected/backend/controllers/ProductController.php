@@ -323,10 +323,27 @@ class ProductController extends BackendController
                     // get the data from the row into array
                     $row_data = $sheet->rangeToArray('A'.$row.':'.$highest_column.$row, null, true, false);
                     // var_dump($row_data);
-                    // create a new model
-                    $model = new Product();
-                    // assign to the model appropriate fields from $row_data array
-                    $model->sku = $row_data[0][0];
+                    // checking if Excel file's SKU column is not empty
+                    if (!empty($row_data[0][0])) {
+                        // checking if Product already exists in the database
+                        if (Product::find()->oneBySku($row_data[0][0])->exists()) {
+                            // if exists, then the Product will be updated
+                            $model = Product::find()->oneBySku($row_data[0][0])->one();
+                        } else {
+                            // otherwise - create new Product model...
+                            $model = new Product();
+                            // ...and immediately assign new SKU. In the case with
+                            // existing model SKU is already assigned
+                            $model->sku = $row_data[0][0];
+                        }
+                    } else {
+                        $model = new Product();
+                        $model->addError('sku', 'You haven\'t supplied the SKU! Check your Excel file for typos!');
+                        $import_errors[$row] = $model->errors;
+                        continue;
+                    }
+
+                    // assign to the model the rest of appropriate fields from $row_data array
                     $model->product_category_id = $model->getCategoryIdByName($row_data[0][1]);
                     $model->name = $row_data[0][2];
                     $model->size = $row_data[0][3];

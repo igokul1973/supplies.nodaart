@@ -55,6 +55,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'supplier_sku',
             'supplier_price',
             'wholesale_price',
+            'size',
             'width',
             'height',
             'depth',
