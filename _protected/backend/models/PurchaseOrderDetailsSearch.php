@@ -167,14 +167,22 @@ class PurchaseOrderDetailsSearch extends PurchaseOrderDetails
                     list ($main_sku, $size) = explode("-", $sku);
                     if (ctype_digit($size)) {
                         // var_dump($skus_array);
-                            $temp_array[$main_sku][] = [
-                                'id' => $model->id,
-                                'picture_path' => $model->product->mainProductPicture,
-                                'sku' => $main_sku,
-                                'size' => $size,
-                                'quantity' => $model->quantity,
-                                'product_name' => $model->product->name,
-                            ];    
+                        $temp_array[$main_sku][] = [
+                            'id' => $model->id,
+                            'picture_path' => $model->product->mainProductPicture,
+                            'sku' => $main_sku,
+                            'size' => $size,
+                            'quantity' => $model->quantity,
+                            'product_name' => $model->product->name,
+                        ];    
+                    } else {
+                       $temp_array[$main_sku][] = [
+                           'id' => $model->id,
+                           'picture_path' => $model->product->mainProductPicture,
+                           'sku' => $sku,
+                           'quantity' => $model->quantity,
+                           'product_name' => $model->product->name,
+                       ];  
                     }
                 } else {
                     $temp_array[$sku][] = [
