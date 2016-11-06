@@ -1,5 +1,7 @@
 # yii console command
-/yii
+/_protected/yii
+
+/index.php
 
 # phpstorm project files
 .idea
