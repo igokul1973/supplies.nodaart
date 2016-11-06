@@ -16,7 +16,6 @@ use yii\behaviors\TimestampBehavior;
  * @property string $name
  * @property integer $size
  * @property string $short_descr
- * @property string $short_descr
  * @property string $long_descr
  * @property string $notes
  * @property string $supplier_sku
@@ -162,15 +161,15 @@ class Product extends \yii\db\ActiveRecord
     }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * @return string
      */
     public function getMainProductPicture()
     {
         if (!empty($this->productPictures) && $this->productPictures !== null) {
-            return $picture_path = $this->productPictures[0]->file_url . $this->productPictures[0]->file_name;
+            return $this->productPictures[0]->file_url . $this->productPictures[0]->file_name;
         }
             
-        return $picture_path = 'http://placehold.it/150x150';
+        return 'http://placehold.it/150x150';
 
     }
 

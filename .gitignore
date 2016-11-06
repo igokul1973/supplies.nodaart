@@ -12,6 +12,10 @@ nbproject
 .project
 .settings
 
+# JSLint and JSHint
+.jshint*
+.jslint*
+
 # windows thumbnail cache
 Thumbs.db
 
@@ -23,6 +27,9 @@ composer.phar
 
 # gulp
 gulpfile.js
+
+# NPM
+/node_modules
 
 # Mac DS_Store Files
 .DS_Store
@@ -36,3 +43,6 @@ phpunit.phar
 /_protected/frontend/runtime
 /_protected/backend/runtime
 /_protected/common/runtime
+
+# Uploads directory
+/uploads

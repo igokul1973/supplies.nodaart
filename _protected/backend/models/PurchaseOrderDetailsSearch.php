@@ -147,17 +147,15 @@ class PurchaseOrderDetailsSearch extends PurchaseOrderDetails
 
     /**
      * Creates data provider instance for Excel export
+     * @param $id
      *
-     * @param array $params
-     *
-     * @return ActiveDataProvider
+     * @return ArrayDataProvider
      */
     public function searchForExcel($id)
     {
 
         $poSearchModelsForExcel = PurchaseOrderDetails::find()->where(['po_id' => $id])->all();
 
-        $all_skus = [];
         $temp_array = [];
         $data_provider_array = [];
 
@@ -170,7 +168,7 @@ class PurchaseOrderDetailsSearch extends PurchaseOrderDetails
                         $temp_array[$main_sku][] = [
                             'id' => $model->id,
                             'picture_path' => $model->product->mainProductPicture,
-                            'sku' => $main_sku,
+                            'sku' => $sku,
                             'size' => $size,
                             'quantity' => $model->quantity,
                             'product_name' => $model->product->name,
@@ -212,21 +210,14 @@ class PurchaseOrderDetailsSearch extends PurchaseOrderDetails
                             'id' => $value['id'],
                             'picture_path' => $value['picture_path'],
                             'sku' => $value['sku'],
-                            'quantity' => '',
-                            'product_name' => $value['product_name'],
-                        ];
-                        $data_provider_array[] = [
-                            'id' => $value['id'],
-                            'picture_path' => '',
-                            'sku' => 'Size ' . $value['size'],
                             'quantity' => $value['quantity'],
-                            'product_name' => '',
+                            'product_name' => $value['product_name'],
                         ];
                     } else {
                         $data_provider_array[] = [
                             'id' => $value['id'],
                             'picture_path' => '',
-                            'sku' => 'Size ' . $value['size'],
+                            'sku' => $value['sku'],
                             'quantity' => $value['quantity'],
                             'product_name' => '',
                         ];
@@ -264,9 +255,6 @@ class PurchaseOrderDetailsSearch extends PurchaseOrderDetails
             'asc' => ['sku' => SORT_ASC],
             'desc' => ['sku' => SORT_DESC],
         ];
-
-
-
 
         return $provider;
     }
